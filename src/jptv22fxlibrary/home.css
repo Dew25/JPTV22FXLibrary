@@ -1,0 +1,8 @@
+
+#my-button{
+    -fx-text-fill: red;
+}
+.text-color{
+    -fx-text-fill: blue;
+    -fx-font-size: 16pt;
+}
