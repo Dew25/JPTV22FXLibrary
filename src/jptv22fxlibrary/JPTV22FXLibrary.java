@@ -10,16 +10,33 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author Melnikov
  */
 public class JPTV22FXLibrary extends Application {
+
+    private final EntityManager em;
+    private Stage primaryStage;
+
+    public JPTV22FXLibrary() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTV22FXLibraryPU");
+        em = emf.createEntityManager();
+    }
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
+        this.primaryStage=primaryStage;
+        this.primaryStage.setTitle("JPTV22FXLibrary");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("home.fxml"));
+        Parent root = loader.load();
+        HomeController homeController = loader.getController();
+        homeController.setApp(this);
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/jptv22fxlibrary/home.css").toExternalForm());
         primaryStage.setScene(scene);
@@ -31,6 +48,18 @@ public class JPTV22FXLibrary extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
     
 }

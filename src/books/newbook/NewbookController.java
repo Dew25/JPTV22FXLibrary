@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import jptv22fxlibrary.JPTV22FXLibrary;
 
 /**
  * FXML Controller class
@@ -27,6 +28,7 @@ import javax.persistence.Persistence;
  */
 public class NewbookController implements Initializable {
     private EntityManager em;
+    private JPTV22FXLibrary app;
     private File selectedFile;
     @FXML
     private TextField tfTitleBook;
@@ -37,8 +39,7 @@ public class NewbookController implements Initializable {
     
     
     public NewbookController() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTV22FXLibraryPU");
-        em = emf.createEntityManager();
+       
     }
     @FXML
     public void selectCover(){
@@ -75,5 +76,21 @@ public class NewbookController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        
     }    
+
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
+
+    public JPTV22FXLibrary getApp() {
+        return app;
+    }
+
+    public void setApp(JPTV22FXLibrary app) {
+        this.app = app;
+    }
     
 }
