@@ -19,8 +19,10 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -67,7 +69,15 @@ public class HomeController implements Initializable {
                 FXMLLoader bookLoader = new FXMLLoader();
                 bookLoader.setLocation(getClass().getResource("/books/book/book.fxml"));
                 ImageView ivCoverRoot = bookLoader.load();
+                ivCoverRoot.setCursor(Cursor.OPEN_HAND);
                 BookController bookController = bookLoader.getController();
+                bookController.setApp(app);
+                ivCoverRoot.setOnMouseClicked(event -> {
+                    if (event.getButton() == MouseButton.PRIMARY) {
+                        bookController.showBook(book);
+                    }
+                });
+
                 ivCoverRoot.setImage(new Image(new ByteArrayInputStream(book.getCover())));
                 hbListBooksRoot.getChildren().add(ivCoverRoot);
             }

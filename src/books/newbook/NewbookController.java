@@ -6,20 +6,29 @@
 package books.newbook;
 
 import entity.Book;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import static java.lang.String.format;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jptv22fxlibrary.JPTV22FXLibrary;
+import org.imgscalr.Scalr;
 
 /**
  * FXML Controller class
@@ -55,15 +64,22 @@ public class NewbookController implements Initializable {
         book.setTitle(tfTitleBook.getText());
         try(FileInputStream fis = new FileInputStream(selectedFile)){
            byte[] fileContent = new byte[(int)selectedFile.length()];
-           fis.read(fileContent);
-           book.setCover(fileContent);
-           em.getTransaction().begin();
-           em.persist(book);
-           em.getTransaction().commit();
-           
-        }catch(Exception e){
-            e.printStackTrace();
+           BufferedImage bufferedImage = ImageIO.read(fis);
+           BufferedImage scaleImage = Scalr.resize(bufferedImage, Scalr.Mode.FIT_TO_WIDTH, 400);
         }
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()){
+            BufferedImage bi = convertToBufferedImage(selectedFile);
+            BufferedImage scaleImage = Scalr.resize(bi, Scalr.Mode.FIT_TO_WIDTH, 400);
+            ImageIO.write(scaleImage,"img", byteArrayOutputStream);
+            book.setCover(byteArrayOutputStream.toByteArray());
+            em.getTransaction().begin();
+            em.persist(book);
+            em.getTransaction().commit();
+        } catch (IOException ex) {
+            Logger.getLogger(NewbookController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+           
+        
         btSelectCover.disableProperty().set(false);
         selectedFile = null;
         tfTitleBook.setText("");
@@ -91,6 +107,15 @@ public class NewbookController implements Initializable {
 
     public void setApp(JPTV22FXLibrary app) {
         this.app = app;
+    }
+    public static BufferedImage convertToBufferedImage(File file) {
+        try {
+            // Чтение изображения из файла с использованием ImageIO
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
 }

@@ -1,7 +1,4 @@
-/*
- * Empty Stylesheet file.
- */
-
-.mainFxmlClass {
-
+#big_book_cover{
+    -fx-pref-width:600px;
+    -fx-pref-height:600px;
 }

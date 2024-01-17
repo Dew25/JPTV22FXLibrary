@@ -6,3 +6,7 @@
     -fx-text-fill: blue;
     -fx-font-size: 16pt;
 }
+#big_book_cover{
+    -fx-width-size:600px;
+    -fx-height-size:600px;
+}
