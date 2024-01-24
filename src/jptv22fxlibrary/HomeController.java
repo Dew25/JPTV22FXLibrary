@@ -26,6 +26,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javax.persistence.EntityManager;
+import users.login.LoginController;
+import users.newuser.NewuserController;
 
 /**
  *
@@ -51,6 +53,35 @@ public class HomeController implements Initializable {
             vbHomeContent.getChildren().add(vbNewBookRoot);
         } catch (IOException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/newbook/newbook.fxml", ex);
+        }
+    }
+    @FXML public void clickMenuLogin(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/users/login/login.fxml"));
+            VBox vbLoginRoot = loader.load();
+            LoginController loginController = loader.getController();
+            loginController.setEntityManager(getEntityManager());
+            app.getPrimaryStage().setTitle("JPTV22Library-Вход");
+            vbHomeContent.getChildren().clear();
+            vbHomeContent.getChildren().add(vbLoginRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /users/login/login.fxml", ex);
+        }
+    }
+    
+    @FXML public void clickMenuAddNewUser(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/users/newuser/newuser.fxml"));
+            VBox vbNewuserRoot = loader.load();
+            NewuserController newuserController = loader.getController();
+            newuserController.setEntityManager(getEntityManager());
+            app.getPrimaryStage().setTitle("JPTV22Library-регистрация пользователя");
+            vbHomeContent.getChildren().clear();
+            vbHomeContent.getChildren().add(vbNewuserRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен //users/newuser/newuser.fxml", ex);
         }
     }
     @FXML 

@@ -5,6 +5,7 @@
  */
 package jptv22fxlibrary;
 
+import entity.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +20,7 @@ import javax.persistence.Persistence;
  * @author Melnikov
  */
 public class JPTV22FXLibrary extends Application {
-
+    public static User currentUser;
     private final EntityManager em;
     private Stage primaryStage;
 

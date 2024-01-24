@@ -11,10 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -31,6 +33,8 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String login;
     private String password;
+    @ElementCollection
+    @OneToMany
     private List<String> roles;
 
     public User() {

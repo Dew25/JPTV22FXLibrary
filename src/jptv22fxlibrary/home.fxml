@@ -17,9 +17,10 @@
                   <MenuItem fx:id="mbBooksListBooks" mnemonicParsing="false" onAction="#clickMenuListBooks" text="Список книг" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Пользователи">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="mbAddNewUser" mnemonicParsing="false" onAction="#clickMenuAddNewUser" text="Новый пользователь" />
+                  <MenuItem fx:id="mbLogin" mnemonicParsing="false" onAction="#clickMenuLogin" text="Войти" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
