@@ -9,7 +9,7 @@
 
 <VBox fx:id="vbHomeRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jptv22fxlibrary.HomeController">
    <children>
-      <MenuBar>
+      <MenuBar fx:id="mbEnter">
         <menus>
           <Menu mnemonicParsing="false" text="Книги">
             <items>
@@ -21,15 +21,20 @@
             <items>
               <MenuItem fx:id="mbAddNewUser" mnemonicParsing="false" onAction="#clickMenuAddNewUser" text="Новый пользователь" />
                   <MenuItem fx:id="mbLogin" mnemonicParsing="false" onAction="#clickMenuLogin" text="Войти" />
+                  <MenuItem fx:id="mbLogout" mnemonicParsing="false" onAction="#clickMenuLogout" text="Выйти" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+          <Menu mnemonicParsing="false" onAction="#clickMenuLogin" text="Администратор">
+               <items>
+                  <MenuItem fx:id="mbAdminPane" mnemonicParsing="false" onAction="#clickMenuShowAdminPane" text="Панель администратора" />
+               </items></Menu>
         </menus>
       </MenuBar>
+      <Label fx:id="lbInfo" alignment="CENTER" prefHeight="17.0" prefWidth="745.0" textFill="#60ab2d">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
       <VBox fx:id="vbHomeContent" prefHeight="374.0" prefWidth="600.0">
          <children>
             <Label alignment="CENTER" prefHeight="178.0" prefWidth="734.0" text="Добро пожаловать в библиотеку JPTV22" textFill="#3d2723" wrapText="true">

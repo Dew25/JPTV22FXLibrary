@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -37,11 +38,20 @@ public class HomeController implements Initializable {
     private JPTV22FXLibrary app;
     private EntityManager em;
     @FXML private VBox vbHomeContent;
+    @FXML private Label lbInfo;
 
     public HomeController() {
 
     }
+    @FXML public void clickMenuShowAdminPane(){
+        
+    }
     @FXML public void clickMenuAddNewBook(){
+        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null || !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains("MANAGER")){
+            lbInfo.setText("Авторизуйтесь!");
+            return;
+        }
+        lbInfo.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/books/newbook/newbook.fxml"));
@@ -56,6 +66,7 @@ public class HomeController implements Initializable {
         }
     }
     @FXML public void clickMenuLogin(){
+        lbInfo.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/users/login/login.fxml"));
@@ -69,8 +80,14 @@ public class HomeController implements Initializable {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /users/login/login.fxml", ex);
         }
     }
+    @FXML public void clickMenuLogout(){
+        jptv22fxlibrary.JPTV22FXLibrary.currentUser = null;
+        vbHomeContent.getChildren().clear();
+        lbInfo.setText("Вы вышли!");
+    }
     
     @FXML public void clickMenuAddNewUser(){
+        lbInfo.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/users/newuser/newuser.fxml"));
@@ -86,6 +103,11 @@ public class HomeController implements Initializable {
     }
     @FXML 
     public void clickMenuListBooks(){
+        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null || !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains("USER")){
+            lbInfo.setText("Авторизуйтесь!");
+            return;
+        }
+        lbInfo.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/books/listbooks/listbooks.fxml"));
