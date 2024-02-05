@@ -15,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 
 /**
@@ -29,6 +31,7 @@ public class LoginController implements Initializable {
     @FXML private TextField tfLogin;
     @FXML private PasswordField pfPassword;
     @FXML private Label lbInfo;
+    @FXML private Label lbLoginTitle;
     @FXML private Button btEnter;
     
     @FXML private void clickButtonEnter(){
@@ -80,5 +83,53 @@ public class LoginController implements Initializable {
     public void setEntityManager(EntityManager entityManager) {
        this.em = entityManager;
     }
+
+    private boolean isAuthorization = false;
+    public void autorizationAction() {
+        tfLogin.setText(jptv22fxlibrary.JPTV22FXLibrary.currentUser.getLogin());
+        tfLogin.setDisable(true);
+        btEnter.setText("Авторизуйтесь");
+        lbLoginTitle.setText("Введите пароль");
+        // Обработчик события для Button
+            //клик на активном Button левой кнопки мыши
+        btEnter.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                // Обработка события для левой кнопки мыши
+                setAuthorization(autorization());
+            }
+        });
+        
+        btEnter.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+               setAuthorization(autorization());
+            }
+        });
+   
+        pfPassword.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setAuthorization(autorization());
+            }
+        });
+        
+    }
+   
+    
+
+    private  boolean autorization() {
+        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser.getPassword().equals(pfPassword.getText())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void setAuthorization(boolean isAuthorization) {
+        this.isAuthorization = isAuthorization;
+    }
+
+    public boolean isAuthorization() {
+        return isAuthorization;
+    }
     
 }
+

@@ -26,7 +26,7 @@
           </Menu>
           <Menu mnemonicParsing="false" onAction="#clickMenuLogin" text="Администратор">
                <items>
-                  <MenuItem fx:id="mbAdminPane" mnemonicParsing="false" onAction="#clickMenuShowAdminPane" text="Панель администратора" />
+                  <MenuItem fx:id="mbAdminPane" mnemonicParsing="false" onAction="#clickMenuShowAdminpane" text="Панель администратора" />
                </items></Menu>
         </menus>
       </MenuBar>

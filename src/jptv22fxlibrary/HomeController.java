@@ -5,6 +5,7 @@
  */
 package jptv22fxlibrary;
 
+import admin.adminpane.AdminpaneController;
 import books.book.BookController;
 import books.listbooks.ListbooksController;
 import books.newbook.NewbookController;
@@ -20,13 +21,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javax.persistence.EntityManager;
+import users.authorization.AuthorizationController;
 import users.login.LoginController;
 import users.newuser.NewuserController;
 
@@ -39,18 +45,23 @@ public class HomeController implements Initializable {
     private EntityManager em;
     @FXML private VBox vbHomeContent;
     @FXML private Label lbInfo;
+    
 
     public HomeController() {
 
     }
-    @FXML public void clickMenuShowAdminPane(){
-        
-    }
+    
     @FXML public void clickMenuAddNewBook(){
         if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null || !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains("MANAGER")){
             lbInfo.setText("Авторизуйтесь!");
+            vbHomeContent.getChildren().clear();
+            clickMenuLogin();
             return;
         }
+//        if(!authorizaiton()){
+//            clickMenuLogin();
+//        };
+        
         lbInfo.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -105,6 +116,8 @@ public class HomeController implements Initializable {
     public void clickMenuListBooks(){
         if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null || !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains("USER")){
             lbInfo.setText("Авторизуйтесь!");
+            vbHomeContent.getChildren().clear();
+            clickMenuLogin();
             return;
         }
         lbInfo.setText("");
@@ -139,6 +152,32 @@ public class HomeController implements Initializable {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/listbooks/listbooks.fxml", ex);
         }
     }
+    @FXML 
+    public void clickMenuShowAdminpane(){
+        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null && !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains("USER")){
+            lbInfo.setText("Авторизуйтесь!");
+            vbHomeContent.getChildren().clear();
+            clickMenuLogin();
+            return;
+        }
+        lbInfo.setText("");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/admin/adminpane/adminpane.fxml"));
+            app.getPrimaryStage().setTitle("JPTV22Library - Панель администратора");
+            AnchorPane apAdminRoot = loader.load();
+            AdminpaneController adminpaneController = loader.getController();
+            adminpaneController.setEntityManager(getApp().getEntityManager());
+            adminpaneController.setCbUsers();
+            adminpaneController.setCbRoles();
+            apAdminRoot.setPrefWidth(JPTV22FXLibrary.WIDTH);
+            apAdminRoot.setPrefHeight(JPTV22FXLibrary.HEIGHT);
+            this.vbHomeContent.getChildren().clear();
+            vbHomeContent.getChildren().add(apAdminRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /admin/adminpane/adminpane.fxml", ex);
+        }
+    }
     
     
     
@@ -163,5 +202,30 @@ public class HomeController implements Initializable {
         this.app = app;
         this.em = app.getEntityManager();
     }
+
+//    private boolean authorizaiton() {
+//       Stage authorizationWindow = new Stage();
+//       authorizationWindow.initModality(Modality.WINDOW_MODAL);
+//       authorizationWindow.initOwner(app.getPrimaryStage());
+//       try {
+//            app.getPrimaryStage().setTitle("JPTV22Library - авторизация");
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setLocation(getClass().getResource("/users/authorization/authorization.fxml"));
+//            VBox vbAuthorizationRoot = loader.load();
+//            AuthorizationController authorizationController = loader.getController();
+//            authorizationWindow.setScene(new Scene(vbAuthorizationRoot));
+//            authorizationWindow.showAndWait();
+//            isAuthorization = authorizationController.isAuthorization();
+//            if(isAuthorization){
+//                authorizationWindow.close();
+//                return true;
+//            }else{
+//                return false;
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /users/login/login.fxml", ex);
+//        }
+//       return false;
+//    }
     
 }

@@ -20,13 +20,17 @@ import javax.persistence.Persistence;
  * @author Melnikov
  */
 public class JPTV22FXLibrary extends Application {
+    public static enum roles {ADMINISTRATOR, MANAGER, USER};
     public static User currentUser;
     private final EntityManager em;
     private Stage primaryStage;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
 
     public JPTV22FXLibrary() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTV22FXLibraryPU");
         em = emf.createEntityManager();
+        createSuperUser();
     }
     
     @Override
@@ -38,7 +42,7 @@ public class JPTV22FXLibrary extends Application {
         Parent root = loader.load();
         HomeController homeController = loader.getController();
         homeController.setApp(this);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,WIDTH,HEIGHT);
         scene.getStylesheets().add(getClass().getResource("/jptv22fxlibrary/home.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -61,6 +65,31 @@ public class JPTV22FXLibrary extends Application {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    private void createSuperUser() {
+        try {
+            em.createQuery("SELECT user FROM User user WHERE user.login = :login")
+                            .setParameter("login", "admin")
+                            .getSingleResult();
+            
+        } catch (Exception e) {
+            User user = new User();
+            user.setFirstname("Juri");
+            user.setLastname("Melnikov");
+            user.setLogin("admin");
+            user.setPassword("12345");
+            user.getRoles().add("ADMINISTRATOR");
+            user.getRoles().add("MANAGER");
+            user.getRoles().add("USER");
+            try {
+                em.getTransaction().begin();
+                em.persist(user);
+                em.getTransaction().commit();
+            } catch (Exception ex) {
+                em.getTransaction().setRollbackOnly();
+            }
+        }
     }
     
 }
