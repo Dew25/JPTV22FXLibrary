@@ -39,7 +39,10 @@ public class AdminpaneController implements Initializable {
 
 
     public void setCbUsers() {
-       cbUsers.setItems(FXCollections.observableArrayList(getEntityManager().createQuery("SELECT u FROM User u").getResultList()));
+       cbUsers.setItems(FXCollections.observableArrayList(getEntityManager()
+               .createQuery("SELECT u FROM User u WHERE u.login != :admin")
+               .setParameter("admin", "admin")
+               .getResultList()));
         cbUsers.setCellFactory(param -> new ListCell<User>(){
             @Override
             protected void updateItem(User user,boolean empty){

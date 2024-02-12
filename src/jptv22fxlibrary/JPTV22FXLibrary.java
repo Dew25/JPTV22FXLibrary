@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import tools.PassEncrypt;
 
 /**
  *
@@ -78,10 +79,11 @@ public class JPTV22FXLibrary extends Application {
             user.setFirstname("Juri");
             user.setLastname("Melnikov");
             user.setLogin("admin");
-            user.setPassword("12345");
-            user.getRoles().add("ADMINISTRATOR");
-            user.getRoles().add("MANAGER");
-            user.getRoles().add("USER");
+            PassEncrypt pe = new PassEncrypt();
+            user.setPassword(pe.getEncryptPassword("12345",pe.getSalt()));
+            user.getRoles().add(jptv22fxlibrary.JPTV22FXLibrary.roles.ADMINISTRATOR.toString());
+            user.getRoles().add(jptv22fxlibrary.JPTV22FXLibrary.roles.MANAGER.toString());
+            user.getRoles().add(jptv22fxlibrary.JPTV22FXLibrary.roles.USER.toString());
             try {
                 em.getTransaction().begin();
                 em.persist(user);

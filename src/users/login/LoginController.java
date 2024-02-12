@@ -18,6 +18,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
+import jptv22fxlibrary.HomeController;
+import tools.PassEncrypt;
 
 /**
  * FXML Controller class
@@ -33,6 +35,7 @@ public class LoginController implements Initializable {
     @FXML private Label lbInfo;
     @FXML private Label lbLoginTitle;
     @FXML private Button btEnter;
+    private HomeController homeController;
     
     @FXML private void clickButtonEnter(){
         try {
@@ -41,21 +44,24 @@ public class LoginController implements Initializable {
             // setParameter(<имя плейсхолдера без двоеточия>,<значение>)
             // .getSingleResult() возвращает один результат запроса типа Object
             // если запрос ничего не найдет выбрасывается исключение
+            PassEncrypt pe = new PassEncrypt();
             User user = (User) em.createQuery("SELECT u FROM User u WHERE u.login = :login")
                     .setParameter("login", tfLogin.getText())
                     .getSingleResult();
-            if(user.getPassword().equals(pfPassword.getText())){
+            if(user.getPassword().equals(pe.getEncryptPassword(pfPassword.getText().trim(),pe.getSalt()))){
                 jptv22fxlibrary.JPTV22FXLibrary.currentUser = user;
-                lbInfo.setText(String.format(
+                this.homeController.setLbInfoUser(String.format(
                                         "Вы вошли как %s (%s %s)",
                                         user.getLogin(),
                                         user.getFirstname(), 
                                         user.getLastname()
                                 ));
             }
+            this.homeController.setLbInfoHome("");
+            this.homeController.getVbHomeContent().getChildren().clear();
             
         } catch (Exception e) {
-            lbInfo.setText("Нет такого пользователя или неправильный пароль");
+            this.homeController.setLbInfoHome("Нет такого пользователя или неправильный пароль");
         }
         tfLogin.setText("");
         pfPassword.setText("");
@@ -129,6 +135,10 @@ public class LoginController implements Initializable {
 
     public boolean isAuthorization() {
         return isAuthorization;
+    }
+
+    public void setHomeController(HomeController homeController) {
+       this.homeController = homeController;
     }
     
 }

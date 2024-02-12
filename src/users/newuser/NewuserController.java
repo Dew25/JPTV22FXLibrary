@@ -10,10 +10,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javax.persistence.EntityManager;
+import tools.PassEncrypt;
 
 /**
  * FXML Controller class
@@ -27,6 +30,8 @@ public class NewuserController implements Initializable {
     @FXML private TextField tfLastname;
     @FXML private TextField tfLogin;
     @FXML private PasswordField pfPassword;
+    @FXML private Button btAddNewUser;
+    
     @FXML private Label lbInfo;
     
     
@@ -36,7 +41,8 @@ public class NewuserController implements Initializable {
         user.setFirstname(tfFirstname.getText());
         user.setLastname(tfLastname.getText());
         user.setLogin(tfLogin.getText());
-        user.setPassword(pfPassword.getText());
+        PassEncrypt pe = new PassEncrypt();
+        user.setPassword(pe.getEncryptPassword(pfPassword.getText().trim(),pe.getSalt()));
         user.getRoles().add("USER");
         try {
             getEntityManager().getTransaction().begin();
@@ -61,7 +67,18 @@ public class NewuserController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        pfPassword.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                clickAddNewUser();
+            }
+        });
+
+        // Обработчик события для Button
+        btAddNewUser.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                btAddNewUser.fire();
+            }
+        });
     }    
 
     public void setEntityManager(EntityManager entityManager) {

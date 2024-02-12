@@ -10,3 +10,7 @@
     -fx-width-size:600px;
     -fx-height-size:600px;
 }
+.info-user{
+    -fx-text-fill: #c1565b;
+    -fx-font-size: 14pt;
+}

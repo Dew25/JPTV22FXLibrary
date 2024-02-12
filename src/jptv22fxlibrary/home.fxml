@@ -30,7 +30,12 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <Label fx:id="lbInfo" alignment="CENTER" prefHeight="17.0" prefWidth="745.0" textFill="#60ab2d">
+      <Label fx:id="lbInfoUser" alignment="CENTER" layoutX="10.0" layoutY="35.0" prefHeight="17.0" prefWidth="745.0" styleClass="info-user" stylesheets="@home.css">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbInfoHome" alignment="CENTER" prefHeight="17.0" prefWidth="745.0" textFill="#60ab2d">
          <font>
             <Font size="14.0" />
          </font>
