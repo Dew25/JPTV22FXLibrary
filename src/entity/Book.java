@@ -5,9 +5,14 @@
  */
 package entity;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -96,5 +101,13 @@ public class Book implements Serializable {
                 + '}';
     }
     
-    
+    public StringProperty idProperty(){
+        return new SimpleStringProperty(String.valueOf(id));
+    }
+    public StringProperty titleProperty() {
+        return new SimpleStringProperty(title);
+    }
+    public InputStream getCoverAsStream(){
+        return new ByteArrayInputStream(this.cover);
+    }
 }

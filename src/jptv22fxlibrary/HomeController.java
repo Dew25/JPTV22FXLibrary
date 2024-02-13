@@ -9,6 +9,7 @@ import admin.adminpane.AdminpaneController;
 import books.book.BookController;
 import books.listbooks.ListbooksController;
 import books.newbook.NewbookController;
+import books.tablebooks.TableBooksController;
 import entity.Book;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,11 +23,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javax.persistence.EntityManager;
@@ -146,6 +147,27 @@ public class HomeController implements Initializable {
             vbHomeContent.getChildren().add(hbListBooksRoot);
         } catch (IOException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/listbooks/listbooks.fxml", ex);
+        }
+    }
+    @FXML 
+    public void clickMenuTableBooks(){
+        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+            return;
+        }
+        lbInfoHome.setText("");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/books/tablebooks/tablebooks.fxml"));
+            TableView tvBooksRoot = loader.load();
+            TableBooksController tableBooksController = loader.getController();
+            app.getPrimaryStage().setTitle("JPTV22Library-список книг");
+            tableBooksController.setEntityManager(getApp().getEntityManager());
+            tableBooksController.setApp(app);
+            tableBooksController.initTable();
+            vbHomeContent.getChildren().clear();
+            vbHomeContent.getChildren().add(tvBooksRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/tablebooks/tablebooks.fxml", ex);
         }
     }
     @FXML 
