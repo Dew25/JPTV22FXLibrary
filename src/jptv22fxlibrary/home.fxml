@@ -21,6 +21,7 @@
           <Menu mnemonicParsing="false" text="Пользователи">
             <items>
               <MenuItem fx:id="mbAddNewUser" mnemonicParsing="false" onAction="#clickMenuAddNewUser" text="Новый пользователь" />
+                  <MenuItem fx:id="mbEditPrfile" mnemonicParsing="false" onAction="#clickMenuEditProfile" text="Профиль" />
                   <MenuItem fx:id="mbLogin" mnemonicParsing="false" onAction="#clickMenuLogin" text="Войти" />
                   <MenuItem fx:id="mbLogout" mnemonicParsing="false" onAction="#clickMenuLogout" text="Выйти" />
             </items>

@@ -33,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javax.persistence.EntityManager;
 import users.login.LoginController;
 import users.newuser.NewuserController;
+import users.profile.ProfileController;
 
 /**
  *
@@ -49,7 +50,27 @@ public class HomeController implements Initializable {
     public HomeController() {
         
     }
-    
+    @FXML public void clickMenuEditProfile(){
+        
+        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+            return;
+        }
+        
+        lbInfoHome.setText("");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/users/profile/profile.fxml"));
+            VBox vbProfileRoot = loader.load();
+            ProfileController profileController = loader.getController();
+            profileController.setHomeController(this);
+            profileController.initProfileForm();
+            app.getPrimaryStage().setTitle("JPTV22Library - профайл пользователя");
+            vbHomeContent.getChildren().clear();
+            vbHomeContent.getChildren().add(vbProfileRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /users/profile/profile.fxml", ex);
+        }
+    }
     @FXML public void clickMenuAddNewBook(){
         
         if(!this.authorizationInfo(JPTV22FXLibrary.roles.MANAGER.toString())){
@@ -70,6 +91,7 @@ public class HomeController implements Initializable {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/newbook/newbook.fxml", ex);
         }
     }
+    
     @FXML public void clickMenuLogin(){
         clickMenuLogin("");
     }
@@ -93,6 +115,7 @@ public class HomeController implements Initializable {
         jptv22fxlibrary.JPTV22FXLibrary.currentUser = null;
         vbHomeContent.getChildren().clear();
         lbInfoHome.setText("Вы вышли!");
+        lbInfoUser.setText("");
     }
     
     @FXML public void clickMenuAddNewUser(){
@@ -132,6 +155,7 @@ public class HomeController implements Initializable {
                 bookLoader.setLocation(getClass().getResource("/books/book/book.fxml"));
                 ImageView ivCoverRoot = bookLoader.load();
                 ivCoverRoot.setCursor(Cursor.OPEN_HAND);
+                ivCoverRoot.setId("small_book_cover");
                 BookController bookController = bookLoader.getController();
                 bookController.setApp(app);
                 ivCoverRoot.setOnMouseClicked(event -> {
