@@ -5,32 +5,21 @@
  */
 package books.tablebooks;
 
+import books.book.BookController;
 import entity.Book;
-import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javax.persistence.EntityManager;
-import jptv22fxlibrary.JPTV22FXLibrary;
+import jptv22fxlibrary.HomeController;
 
 /**
  * FXML Controller class
@@ -39,29 +28,24 @@ import jptv22fxlibrary.JPTV22FXLibrary;
  */
 public class TableBooksController implements Initializable {
 
-    private EntityManager em;
+    
     @FXML private TableView tvBooksRoot;
-    private JPTV22FXLibrary app;
+    private HomeController homeController;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tvBooksRoot.setPrefSize(jptv22fxlibrary.JPTV22FXLibrary.WIDTH, jptv22fxlibrary.JPTV22FXLibrary.HEIGHT);
+        
     }    
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.em = entityManager; 
-    }
-
-    public EntityManager getEntityManager() {
-        return em;
-    }
+    
     
     public void initTable() {
+       
         tvBooksRoot.setItems(FXCollections.observableArrayList(
-                getEntityManager()
+                homeController.getEntityManager()
                         .createQuery("SELECT b FROM Book b")
                         .getResultList()
         ));
@@ -82,37 +66,17 @@ public class TableBooksController implements Initializable {
                 if(event.getClickCount() == 2 && (!row.isEmpty())){
                     Book book = row.getItem();
                     System.out.println("Выбрана книга с ID: " + book.getId());
-                    Stage bookWindow = new Stage();
-                    bookWindow.setTitle(book.getTitle());
-                    bookWindow.initModality(Modality.WINDOW_MODAL);
-                    bookWindow.initOwner(app.getPrimaryStage());
-                    Image image = new Image(new ByteArrayInputStream(book.getCover()));
-                    ImageView ivCoverBig = new ImageView(image);
-                    ivCoverBig.setId("big_book_cover");
-                    VBox vbBook = new VBox();
-                    vbBook.setAlignment(Pos.CENTER);
-                    vbBook.getChildren().add(ivCoverBig);
-                    Button btnRead = new Button("Читать");
-                    Button btnClose = new Button("Закрыть");
-                    HBox hbButtons = new HBox();
-                    hbButtons.setPrefSize(Double.MAX_VALUE, 29);
-                    hbButtons.alignmentProperty().set(Pos.CENTER_RIGHT);
-                    hbButtons.setSpacing(10);
-                    hbButtons.setPadding(new Insets(10));
-                    hbButtons.getChildren().addAll(btnRead,btnClose);
-                    vbBook.getChildren().add(hbButtons);
-                    Scene scene = new Scene(vbBook,450,700);
-                    scene.getStylesheets().add(getClass().getResource("/books/book/book.css").toExternalForm());
-                    bookWindow.setScene(scene);
-                    bookWindow.show();
+                    BookController bookController = new BookController();
+                    bookController.setHomeController(homeController);
+                    bookController.showBook(book);
                 }
             });
             return row;
         });
     }
 
-    public void setApp(JPTV22FXLibrary app) {
-        this.app = app;
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
     }
 
     class ImageViewTableCell<S, T> extends TableCell<S, T> {
@@ -120,9 +84,7 @@ public class TableBooksController implements Initializable {
         public ImageViewTableCell() {
             imageView.setFitWidth(50);
             imageView.setFitHeight(80);
-                     
         }
-        
         
         @Override
         protected void updateItem(T item, boolean empty) {

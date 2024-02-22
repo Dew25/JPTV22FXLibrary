@@ -8,6 +8,8 @@ package entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -130,5 +132,10 @@ public class History implements Serializable {
                 + '}';
     }
 
-   
+   public StringProperty giveUpDateProperty() {
+        return new SimpleStringProperty(this.giveBookToReaderDate.toString());
+   }
+   public StringProperty idProperty(){
+        return new SimpleStringProperty(String.valueOf(id));
+   }
 }

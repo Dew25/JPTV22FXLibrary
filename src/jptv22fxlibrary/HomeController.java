@@ -9,6 +9,7 @@ import admin.adminpane.AdminpaneController;
 import books.book.BookController;
 import books.listbooks.ListbooksController;
 import books.newbook.NewbookController;
+import books.returnbook.ReturnBookController;
 import books.tablebooks.TableBooksController;
 import entity.Book;
 import java.io.ByteArrayInputStream;
@@ -144,7 +145,7 @@ public class HomeController implements Initializable {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/books/listbooks/listbooks.fxml"));
             HBox hbListBooksRoot = loader.load();
-            ListbooksController listbooksController = loader.getController();
+           // ListbooksController listbooksController = loader.getController();
             app.getPrimaryStage().setTitle("JPTV22Library-список книг");
             List<Book> listBooks = getEntityManager().createQuery("SELECT b FROM Book b").getResultList();
             hbListBooksRoot.getChildren().clear();
@@ -157,7 +158,7 @@ public class HomeController implements Initializable {
                 ivCoverRoot.setCursor(Cursor.OPEN_HAND);
                 ivCoverRoot.setId("small_book_cover");
                 BookController bookController = bookLoader.getController();
-                bookController.setApp(app);
+                bookController.setHomeController(this);
                 ivCoverRoot.setOnMouseClicked(event -> {
                     if (event.getButton() == MouseButton.PRIMARY) {
                         bookController.showBook(book);
@@ -174,6 +175,27 @@ public class HomeController implements Initializable {
         }
     }
     @FXML 
+    public void clickMenuReturnBook(){
+        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+            return;
+        }
+        lbInfoHome.setText("");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/books/returnbook/returnbook.fxml"));
+            TableView tvReturnBookRoot = loader.load();
+            ReturnBookController returnBookController = loader.getController();
+            app.getPrimaryStage().setTitle("JPTV22Library - возврат книги");
+            returnBookController.setHomeController(this);
+            returnBookController.initTable();
+            vbHomeContent.getChildren().clear();
+            tvReturnBookRoot.setPrefSize(vbHomeContent.getWidth(), vbHomeContent.getHeight());
+            vbHomeContent.getChildren().add(tvReturnBookRoot);
+        } catch (IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Не загружен /books/tablebooks/tablebooks.fxml", ex);
+        }
+    }
+    @FXML 
     public void clickMenuTableBooks(){
         if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
             return;
@@ -185,8 +207,7 @@ public class HomeController implements Initializable {
             TableView tvBooksRoot = loader.load();
             TableBooksController tableBooksController = loader.getController();
             app.getPrimaryStage().setTitle("JPTV22Library-список книг");
-            tableBooksController.setEntityManager(getApp().getEntityManager());
-            tableBooksController.setApp(app);
+            tableBooksController.setHomeController(this);
             tableBooksController.initTable();
             vbHomeContent.getChildren().clear();
             vbHomeContent.getChildren().add(tvBooksRoot);
@@ -222,6 +243,7 @@ public class HomeController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        vbHomeContent.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
         if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null){
             lbInfoUser.setText("Авторизуйтесь!");
         }else{
@@ -270,6 +292,10 @@ public class HomeController implements Initializable {
         }
         return true;
 
+    }
+
+    public Label getLbInfoHome() {
+        return lbInfoHome;
     }
     
 }

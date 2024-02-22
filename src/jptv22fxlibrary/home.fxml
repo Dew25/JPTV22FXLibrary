@@ -16,6 +16,7 @@
               <MenuItem fx:id="mbBooksAddNewBook" mnemonicParsing="false" onAction="#clickMenuAddNewBook" text="Добавить новую книгу" />
                   <MenuItem fx:id="mbBooksListBooks" mnemonicParsing="false" onAction="#clickMenuListBooks" text="Список книг" />
                   <MenuItem fx:id="mbBooksTableBooks" mnemonicParsing="false" onAction="#clickMenuTableBooks" text="Таблица с книгами" />
+                  <MenuItem fx:id="mbBooksReturnBook" mnemonicParsing="false" onAction="#clickMenuReturnBook" text="Возврат книги" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Пользователи">

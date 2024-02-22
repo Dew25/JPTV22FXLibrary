@@ -45,6 +45,7 @@ public class JPTV22FXLibrary extends Application {
         homeController.setApp(this);
         Scene scene = new Scene(root,WIDTH,HEIGHT);
         scene.getStylesheets().add(getClass().getResource("/jptv22fxlibrary/home.css").toExternalForm());
+        primaryStage.centerOnScreen();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
