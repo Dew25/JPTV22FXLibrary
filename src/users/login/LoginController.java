@@ -16,7 +16,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import jptv22fxlibrary.HomeController;
 import tools.PassEncrypt;
@@ -59,6 +58,9 @@ public class LoginController implements Initializable {
             }
             this.homeController.setLbInfoHome("");
             this.homeController.getVbHomeContent().getChildren().clear();
+            if(this.homeController.getMenuItem()!=null){
+                this.homeController.getMenuItem().fire();
+            }
             
         } catch (Exception e) {
             this.homeController.setLbInfoHome("Нет такого пользователя или неправильный пароль");

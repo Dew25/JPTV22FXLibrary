@@ -7,7 +7,6 @@ package jptv22fxlibrary;
 
 import admin.adminpane.AdminpaneController;
 import books.book.BookController;
-import books.listbooks.ListbooksController;
 import books.newbook.NewbookController;
 import books.returnbook.ReturnBookController;
 import books.tablebooks.TableBooksController;
@@ -24,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,20 +43,31 @@ import users.profile.ProfileController;
 public class HomeController implements Initializable {
     private JPTV22FXLibrary app;
     private EntityManager em;
+    private MenuItem menuItem;
     @FXML private VBox vbHomeContent;
     @FXML private Label lbInfoHome;
     @FXML private Label lbInfoUser;
+    @FXML private MenuItem mbBooksAddNewBook;
+    @FXML private MenuItem mbBooksListBooks;
+    @FXML private MenuItem mbBooksTableBooks;
+    @FXML private MenuItem mbBooksReturnBook;
+    @FXML private MenuItem mbEditPrfile;
+    @FXML private MenuItem mbAdminPane;
     
 
     public HomeController() {
         
     }
     @FXML public void clickMenuEditProfile(){
-        
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+        setMenuItem(mbEditPrfile);
+        if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.USER.toString())){
+            clickMenuLogin("Авторизуйтесь");
             return;
         }
-        
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -73,10 +84,16 @@ public class HomeController implements Initializable {
         }
     }
     @FXML public void clickMenuAddNewBook(){
-        
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.MANAGER.toString())){
+        setMenuItem(mbBooksAddNewBook);
+        if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.MANAGER.toString())){
+            clickMenuLogin("Вы должны иметь роль "+JPTV22FXLibrary.roles.MANAGER.toString());
             return;
         }
+        
         
         lbInfoHome.setText("");
         try {
@@ -113,14 +130,17 @@ public class HomeController implements Initializable {
         }
     }
     @FXML public void clickMenuLogout(){
+        this.menuItem=null;
         jptv22fxlibrary.JPTV22FXLibrary.currentUser = null;
         vbHomeContent.getChildren().clear();
         lbInfoHome.setText("Вы вышли!");
         lbInfoUser.setText("");
+        clickMenuLogin();
     }
     
     @FXML public void clickMenuAddNewUser(){
-       
+                
+
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -137,9 +157,16 @@ public class HomeController implements Initializable {
     }
     @FXML 
     public void clickMenuListBooks(){
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+        setMenuItem(mbBooksListBooks);
+        if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.USER.toString())){
+            clickMenuLogin("Авторизуйтесь");
             return;
         }
+        
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -176,9 +203,16 @@ public class HomeController implements Initializable {
     }
     @FXML 
     public void clickMenuReturnBook(){
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+        setMenuItem(mbBooksReturnBook);
+         if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.USER.toString())){
+            clickMenuLogin("Авторизуйтесь");
             return;
         }
+        
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -197,9 +231,16 @@ public class HomeController implements Initializable {
     }
     @FXML 
     public void clickMenuTableBooks(){
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.USER.toString())){
+        setMenuItem(mbBooksTableBooks);
+         if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.USER.toString())){
+            clickMenuLogin();
             return;
         }
+        
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -217,9 +258,16 @@ public class HomeController implements Initializable {
     }
     @FXML 
     public void clickMenuShowAdminpane(){
-        if(!this.authorizationInfo(JPTV22FXLibrary.roles.ADMINISTRATOR.toString())){
+        setMenuItem(mbAdminPane);
+         if(JPTV22FXLibrary.currentUser == null){
+           clickMenuLogin();
+           return;
+        }
+        if(!JPTV22FXLibrary.currentUser.getRoles().contains(JPTV22FXLibrary.roles.ADMINISTRATOR.toString())){
+            clickMenuLogin("Вы должны иметь роль "+JPTV22FXLibrary.roles.ADMINISTRATOR.toString());
             return;
         }
+        
         lbInfoHome.setText("");
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -279,23 +327,29 @@ public class HomeController implements Initializable {
         return this.vbHomeContent;
     }
 
-    private boolean authorizationInfo(String role) {
-        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null || !jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains(role)){
+    private void authorizationInfo(String role, MenuItem menuItem) {
+        if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null){
             lbInfoHome.setText("");
             vbHomeContent.getChildren().clear();
-            if(jptv22fxlibrary.JPTV22FXLibrary.currentUser == null){
-                    clickMenuLogin("Авторизуйтесь");
-            }else{
-                clickMenuLogin(jptv22fxlibrary.JPTV22FXLibrary.currentUser.getLogin() + " не имеет права на эту операцию");
-            }
-            return false;
+            clickMenuLogin("Авторизуйтесь");
+            return;
         }
-        return true;
-
+        if(!jptv22fxlibrary.JPTV22FXLibrary.currentUser.getRoles().contains(role)){
+            clickMenuLogin(jptv22fxlibrary.JPTV22FXLibrary.currentUser.getLogin() + " не имеет права на эту операцию");
+            
+        }
     }
 
     public Label getLbInfoHome() {
         return lbInfoHome;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
     }
     
 }
